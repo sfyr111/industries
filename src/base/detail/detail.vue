@@ -6,7 +6,7 @@
       </v-header>
       <scroll :data="[detail]" class="content">
         <div class="">
-          <block></block> 
+          <block></block>
           <div class="content-box">
             <div class="content-title">
               <span>
@@ -22,7 +22,7 @@
               </span>
             </div>
             <div class="content-body" v-html="detail.content">
-            
+
             </div>
             <div class="content-foort">
               <div class="ft-left">
@@ -60,7 +60,7 @@
   import VHeader from '@/components/v-header/v-header.vue'
   import { Actionsheet } from 'vux'
   import { ERR_OK } from 'api/config'
-  import { saveCollectArticles } from 'api'
+  import { saveCollectArticles, judgeCollectArticles } from 'api'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
 
   export default {
@@ -77,12 +77,13 @@
     data () {
       return {
         showMod: false,
-        menus: {}
+        menus: {},
+        isFavorite: false
       }
     },
     computed: {
       modMenus () {
-        return this.detail.isFavorite ? {
+        return this.isFavorite ? {
           forwardButton: '转发',
           wumaohoutai: '已收藏'
         } : {
@@ -109,6 +110,7 @@
       },
       showMenuMod () {
         this.showMod = true
+        this._judgeCollectArticles(this.detail.id)
       },
       clickMenu (menu) { // 收藏或转发
         // if (menu === 'forwardButton') this.forward()
@@ -137,6 +139,17 @@
               time: 500,
               type: 'success'
             })
+          }
+        })
+      },
+      _judgeCollectArticles (id) {
+        const params = {
+          articleId: id
+        }
+        judgeCollectArticles(params).then(data => {
+          if (data.code === ERR_OK) {
+            if (data.obj) this.isFavorite = true
+            else this.isFavorite = false
           }
         })
       },

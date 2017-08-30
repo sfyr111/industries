@@ -9,11 +9,12 @@ const _getDetail = async function (id) {
   const params = {
     id
   }
-  return await getDetail(params).then(data => {
+  const data = await getDetail(params).then(data => {
     if (data.code === ERR_OK) {
       return data
     }
   })
+  return data
 }
 
 export const saveUser = function ({ commit }, userToken) {

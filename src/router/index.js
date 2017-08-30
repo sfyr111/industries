@@ -11,7 +11,8 @@ import {
         Analysis,
         Favorites,
         Discovery,
-        DynamicDetail
+        DynamicDetail,
+        AnalysisOption
       } from './components'
 
 Vue.use(Router)
@@ -59,7 +60,14 @@ export default new Router({
     {
       path: '/analysis',
       name: 'analysis',
-      component: Analysis
+      component: Analysis,
+      children: [
+        {
+          path: ':item',
+          name: 'analysis-option',
+          component: AnalysisOption
+        }
+      ]
     },
     {
       path: '/search',

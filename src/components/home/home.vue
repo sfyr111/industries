@@ -7,10 +7,10 @@
       <div v-show="size">
         <block></block>
         <hotspot :list="hotspotGroup" @select="selectItem" ref="hotspot"></hotspot>
-        <tab-page :data="companyGroup" @select="selectItem" title="企业信息" ref="companyClassifyList"></tab-page>
-        <tab-page :data="productsGroup" @select="selectItem" title="产品信息" ref="productsClassifyList"></tab-page>
-        <rank :ranking="companyRank" title="企业竞争力排行" ref="companyRank"></rank>
         <tab-page :data="tenderGroup" @select="selectItem" title="招标信息" ref="tenderClassifyList"></tab-page>
+        <tab-page :data="companyGroup" @select="selectItem" title="企业信息" ref="companyClassifyList"></tab-page>
+        <rank :ranking="companyRank" title="企业竞争力排行" ref="companyRank"></rank>
+        <tab-page :data="productsGroup" @select="selectItem" title="产品信息" ref="productsClassifyList"></tab-page>
         <rank :ranking="productsRank" title="产品竞争力排行" ref="productsRank"></rank>
       </div>
       <div class="loading-container" v-show="!size">
@@ -204,7 +204,6 @@
     .info
       overflow hidden
       height calc(100% - 1.436667rem)
-      background-color $color-background
     i.user-icon
       extend-click()
       display inline-block

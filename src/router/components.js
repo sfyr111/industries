@@ -63,3 +63,9 @@ export const Personal = resolve => {
     resolve(module)
   })
 }
+
+export const AnalysisOption = resolve => {
+  import('components/analysis-option/analysis-option').then(module => {
+    resolve(module)
+  })
+}

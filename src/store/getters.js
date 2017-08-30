@@ -10,6 +10,8 @@ export const detailShowFlag = state => state.detailShowFlag
 
 export const discoveryItem = state => state.discoveryItem
 
+export const analysisItem = state => state.analysisItem
+
 export const dynamicItem = state => state.dynamicItem
 
 export const visitedList = state => state.visitedList

@@ -2,12 +2,12 @@
   <div class="search">
     <v-header title="搜索"></v-header>
     <div class="search-input-wrapper">
-      <search-input
+      <search-box
         @searchQuery="searchQuery"
         @clearQuery="clearQuery"
         @queryChange="onQueryChange"
-        ref="searchInput">
-      </search-input>
+        ref="searchBox">
+      </search-box>
     </div>
     <div v-show="!query && searchHistory.length" class="search-history-wrapper">
       <scroll class="search-history" :data="searchHistory" :refreshDelay="120" ref="searchHistory">
@@ -18,15 +18,15 @@
               <i class="icon iconfont icon-delete"></i>
             </div>
           </h1>
-          <search-list 
-            :searchHistory="searchHistory" 
+          <search-list
+            :searchHistory="searchHistory"
             @delete="deleteSearchHistory($event)"
             @select="selectAndSearchHistory($event)"></search-list>
         </div>
       </scroll>
       <div class="confirm">
-        <confirm 
-          v-model="isShowClear" 
+        <confirm
+          v-model="isShowClear"
           :title="'是否清空搜索历史'"
           @on-cancel="isShowClear=false"
           @on-confirm="clearSearchHistory">
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="list-wrapper" v-show="query">
-      <list :list="list" 
+      <list :list="list"
             :pullup="pullup"
             :hasMore="hasMore"
             :isShowBlock="isShowBlock"
@@ -42,8 +42,8 @@
             :listenScroll="listenScroll"
             :probeType="probeType"
             @scroll="blurInput"
-            @refresh="" 
-            @loadMore="_loadMore" 
+            @refresh=""
+            @loadMore="_loadMore"
             @selectItem="selectItem"
             ref="list">
       </list>
@@ -59,13 +59,13 @@
   import Scroll from 'base/scroll/scroll'
   import VHeader from 'components/v-header/v-header'
   import SearchList from 'base/search-list/search-list'
-  import SearchInput from 'base/search-input/search-input'
+  import SearchBox from 'base/search-box/search-box'
   import { Confirm } from 'vux'
   import { getSearch } from 'api'
   import { ERR_OK } from 'api/config'
   import { mapActions, mapGetters } from 'vuex'
   import { listLoadMixin } from 'common/js/mixin'
-  
+
   export default {
     name: 'search',
     mixins: [listLoadMixin],
@@ -95,7 +95,7 @@
       Confirm,
       VHeader,
       SearchList,
-      SearchInput
+      SearchBox
     },
     watch: {
       query (newQuery, oldQuery) {
@@ -115,7 +115,7 @@
         this.query = query
       },
       blurInput () {
-        this.$refs.searchInput.blur()
+        this.$refs.searchBox.blur()
       },
       clearQuery () {
         this.list = []
@@ -125,7 +125,7 @@
         this.showLoading(false)
       },
       _setQuery (query) {
-        this.$refs.searchInput.setQuery(query)
+        this.$refs.searchBox.setQuery(query)
       },
       searchQuery (query) {
         if (!query) return

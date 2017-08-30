@@ -7,6 +7,7 @@ const state = {
   detail: {},
   detailShowFlag: false,
   discoveryItem: '',
+  analysisItem: '',
   dynamicItem: {tag: '', title: ''},
   visitedList: loadVisited(),
   searchHistory: loadSearch()

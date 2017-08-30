@@ -8,15 +8,15 @@
         </swiper>
       </section>
       <div class="list-wrapper">
-        <list :list="list" 
-              :pullup="pullup" 
-              :pulldown="pulldown" 
-              :hasMore="hasMore" 
+        <list :list="list"
+              :pullup="pullup"
+              :pulldown="pulldown"
+              :hasMore="hasMore"
               :hasRefresh="hasRefresh"
               :reveal="reveal"
-              @scroll="" 
-              @refresh="_refresh" 
-              @loadMore="_loadMore" 
+              @scroll=""
+              @refresh="_refresh"
+              @loadMore="_loadMore"
               @selectItem="selectItem">
         </list>
       </div>

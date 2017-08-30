@@ -3,6 +3,18 @@ import qs from 'qs'
 
 const apihost = process.env.NODE_ENV === 'production' ? '/industries' : 'http://61.147.125.60:9080/industries/'
 
+axios.interceptors.request.use(function (config) {
+  return config
+}, function (error) {
+  return Promise.reject(error)
+})
+
+axios.interceptors.response.use(function (response) {
+  return response
+}, function (error) {
+  return Promise.reject(error)
+})
+
 /**
  * fetch
  */

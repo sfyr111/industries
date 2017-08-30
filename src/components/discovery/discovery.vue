@@ -2,17 +2,17 @@
   <div class="discovery">
     <v-header title="发现" ref="discoveryHeader"></v-header>
     <div class="list-wrapper">
-      <list :list="list" 
-            :pullup="pullup" 
-            :pulldown="pulldown" 
-            :hasMore="hasMore" 
-            :hasRefresh="hasRefresh" 
+      <list :list="list"
+            :pullup="pullup"
+            :pulldown="pulldown"
+            :hasMore="hasMore"
+            :hasRefresh="hasRefresh"
             :reveal="reveal"
             :probeType="probeType"
             :listenScroll="listenScroll"
             @scroll="_ShowMinTab"
-            @refresh="_refresh" 
-            @loadMore="_loadMore" 
+            @refresh="_refresh"
+            @loadMore="_loadMore"
             @selectItem="selectItem"
             ref="list">
         <discovery-tab @selectTrend="selectTrend" ref="discoveryTab"></discovery-tab>
@@ -24,10 +24,10 @@
 </template>
 
 <script>
+  import List from 'base/list/list'
   import VHeader from 'components/v-header/v-header'
   import DiscoveryTab from 'components/discovery-tab/discovery-tab'
   import DiscoveryMinTab from 'components/discovery-min-tab/discovery-min-tab'
-  import List from 'base/list/list'
   import { getHotNews } from 'api'
   import { ERR_OK } from 'api/config'
   import { mapActions, mapGetters } from 'vuex'
