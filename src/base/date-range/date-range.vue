@@ -1,10 +1,10 @@
 <template>
   <div class="date-range">
     <group class="time-group">
-      <datetime format="YYYY-MM-DD" v-model="startTime" :placeholder="'请选择'" :min-year="2010" :max-year="2020" @on-change="setStartTime" :title="'起始时间:'" clear-text="起始时间" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="完成" cancel-text="取消"></datetime>
+      <datetime format="YYYY-MM-DD" v-model="dateStartTime" :placeholder="'请选择'" :min-year="2010" :max-year="2017" @on-change="setStartTime" :title="'起始时间:'" clear-text="起始时间" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="完成" cancel-text="取消"></datetime>
     </group>
     <group class="time-group">
-      <datetime format="YYYY-MM-DD" v-model="endTime" :placeholder="'请选择'" :min-year="2010" :max-year="2020" @on-change="setEndTime" :title="'结束时间:'" clear-text="结束时间" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="完成" cancel-text="取消"></datetime>
+      <datetime format="YYYY-MM-DD" v-model="dateEndTime" :placeholder="'请选择'" :min-year="2010" :max-year="2017" @on-change="setEndTime" :title="'结束时间:'" clear-text="结束时间" year-row="{value}年" month-row="{value}月" day-row="{value}日" confirm-text="完成" cancel-text="取消"></datetime>
     </group>
   </div>
 </template>
@@ -27,9 +27,12 @@
     },
     data () {
       return {
+        dateStartTime: '',
+        dateEndTime: ''
       }
     },
-    computed: {},
+    computed: {
+    },
     components: {
       Group,
       Datetime
@@ -37,13 +40,22 @@
     watch: {},
     methods: {
       setStartTime () {
-        console.log('starttime')
+        this.$emit('changeDate', {
+          dateStartTime: this.dateStartTime,
+          dateEndTime: this.dateEndTime
+        })
       },
       setEndTime () {
-        console.log('endtime')
+        this.$emit('changeDate', {
+          dateStartTime: this.dateStartTime,
+          dateEndTime: this.dateEndTime
+        })
       }
     },
-    created () {},
+    created () {
+      this.dateStartTime = this.startTime
+      this.dateEndTime = this.endTime
+    },
     mounted () {
     }
   }

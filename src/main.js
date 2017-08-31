@@ -9,10 +9,11 @@ import store from './store'
 import router from './router'
 
 import FastClick from 'fastclick'
+import { ToastPlugin } from 'vux'
+
 import { getParameterByName } from 'common/js/util'
 import vrv from 'common/js/vrv-jssdk'
 
-import { ToastPlugin } from 'vux'
 Vue.use(ToastPlugin)
 
 FastClick.attach(document.body)

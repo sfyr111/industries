@@ -5,6 +5,7 @@ import {
         Help,
         Home,
         User,
+        Charts,
         Search,
         Dynamic,
         Personal,
@@ -24,6 +25,11 @@ export default new Router({
       path: '/test',
       name: 'Test',
       component: Test
+    },
+    {
+      path: '/charts',
+      name: 'Charts',
+      component: Charts
     },
     {
       path: '*',

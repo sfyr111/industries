@@ -102,8 +102,24 @@ export const getCompanyRanking = async function (data = {}) {
   return response
 }
 
+export const getCompanyRankingChart = async function (data = {}) {
+  const url = '/industry/companys/chart2.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.post(url, params)
+  return response
+}
+
 export const getProductsRanking = async function (data = {}) {
   const url = '/industry/products/chart1.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.post(url, params)
+  return response
+}
+
+export const getProductsRankingChart = async function (data = {}) {
+  const url = '/industry/products/chart2.do'
   const params = { userToken: store.getters.userToken, ...data }
 
   const response = await api.post(url, params)

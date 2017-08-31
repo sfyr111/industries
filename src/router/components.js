@@ -1,3 +1,9 @@
+export const Charts = resolve => {
+  import('base/test/charts').then(module => {
+    resolve(module)
+  })
+}
+
 export const Test = resolve => {
   import('base/test/test').then(module => {
     resolve(module)

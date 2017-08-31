@@ -9,14 +9,16 @@
         <hotspot :list="hotspotGroup" @select="selectItem" ref="hotspot"></hotspot>
         <tab-page :data="tenderGroup" @select="selectItem" title="招标信息" ref="tenderClassifyList"></tab-page>
         <tab-page :data="companyGroup" @select="selectItem" title="企业信息" ref="companyClassifyList"></tab-page>
-        <rank :ranking="companyRank" title="企业竞争力排行" ref="companyRank"></rank>
+        <rank :ranking="companyRank" title="企业竞争力排行" @showChart="$refs.companyRankDetail.show()" ref="companyRank"></rank>
         <tab-page :data="productsGroup" @select="selectItem" title="产品信息" ref="productsClassifyList"></tab-page>
-        <rank :ranking="productsRank" title="产品竞争力排行" ref="productsRank"></rank>
+        <rank :ranking="productsRank" title="产品竞争力排行" @showChart="$refs.productsRankDetail.show()" ref="productsRank"></rank>
       </div>
       <div class="loading-container" v-show="!size">
         <loading></loading>
       </div>
     </scroll>
+      <rank-detail @changeDate="_changeCompanyRankingChart" :chartData="companyRankChartData" :startTime="startTime" :endTime="endTime" title="企业竞争力详情" ref="companyRankDetail"></rank-detail>
+      <rank-detail @changeDate="_changeProductsRankingChart" :chartData="productsRankChartData" :startTime="startTime" :endTime="endTime" title="产品竞争力详情" ref="productsRankDetail"></rank-detail>
   </div>
 </template>
 
@@ -25,13 +27,15 @@
   import VHeader from 'components/v-header/v-header'
   import TabPage from 'base/tab-page/tab-page'
   import Rank from 'base/rank/rank'
+  import RankDetail from 'base/rank-detail/rank-detail'
   import Hotspot from 'base/hotspot/hotspot'
   import Scroll from 'base/scroll/scroll'
   import Block from 'base/block/block'
   import Loading from 'base/loading/loading'
+  import { dateFormat } from 'vux'
   import { mapGetters, mapActions } from 'vuex'
   import { ERR_OK } from 'api/config'
-  import { getHotNews, getCompanyClassifyAndList, getProductsClassifyAndList, getTenderClassifyAndList, getCompanyRanking, getProductsRanking } from 'api'
+  import { getHotNews, getCompanyClassifyAndList, getProductsClassifyAndList, getTenderClassifyAndList, getCompanyRanking, getProductsRanking, getCompanyRankingChart, getProductsRankingChart } from 'api'
 
   export default {
     name: 'home',
@@ -43,7 +47,11 @@
         productsGroup: [{name: '标题', datas: [{title: '标题标题', poTime: '123'}]}],
         tenderGroup: [{name: '标题', datas: [{title: '标题标题', poTime: '123'}]}],
         companyRank: [],
-        productsRank: []
+        productsRank: [],
+        companyRankChartData: null,
+        productsRankChartData: null,
+        startTime: dateFormat(Date.now() - 7 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
+        endTime: dateFormat(Date.now(), 'YYYY-MM-DD')
       }
     },
     computed: {
@@ -67,18 +75,20 @@
       }
     },
     components: {
+      Rank,
+      Block,
+      Scroll,
+      Hotspot,
+      Loading,
       VHeader,
       TabPage,
-      Rank,
-      Hotspot,
-      Scroll,
-      Loading,
-      Block
+      RankDetail
     },
     watch: {
       firstLogin (newValue) {
         if (!newValue) {
           this._concurrent()
+          this._concurrentChartData()
         }
       }
     },
@@ -111,6 +121,19 @@
         this.tenderGroup = tenderGroup
         this.companyRank = companyRank
         this.productsRank = productsRank
+
+        return data
+      },
+      async _concurrentChartData () {
+        const data = await Promise.all([
+          this._getCompanyRankingChart(),
+          this._getProductsRankingChart()])
+
+        const [{ obj: companyRankChartData },
+               { obj: productsRankChartData }] = data
+
+        this.companyRankChartData = companyRankChartData
+        this.productsRankChartData = productsRankChartData
 
         return data
       },
@@ -177,6 +200,56 @@
           }
         })
       },
+      async _getCompanyRankingChart () {
+        const params = {
+          count: 5,
+          'query.startPoTime': `${this.startTime} 00:00:00`,
+          'query.endPoTime': `${this.endTime} 00:00:00`
+        }
+        return await getCompanyRankingChart(params).then(data => {
+          if (data.code === ERR_OK) {
+            return data
+          }
+        })
+      },
+      async _getProductsRankingChart () {
+        const params = {
+          count: 5,
+          'query.startPoTime': `${this.startTime} 00:00:00`,
+          'query.endPoTime': `${this.endTime} 00:00:00`
+        }
+        return await getProductsRankingChart(params).then(data => {
+          if (data.code === ERR_OK) {
+            return data
+          }
+        })
+      },
+      _changeCompanyRankingChart ({ dateStartTime, dateEndTime }) {
+        const params = {
+          count: 5,
+          'query.startPoTime': `${dateStartTime} 00:00:00`,
+          'query.endPoTime': `${dateEndTime} 00:00:00`
+        }
+        getCompanyRankingChart(params).then(data => {
+          if (data.code === ERR_OK) {
+            this.companyRankChartData = data.obj
+            return data
+          }
+        })
+      },
+      _changeProductsRankingChart ({ dateStartTime, dateEndTime }) {
+        const params = {
+          count: 5,
+          'query.startPoTime': `${dateStartTime} 00:00:00`,
+          'query.endPoTime': `${dateEndTime} 00:00:00`
+        }
+        getProductsRankingChart(params).then(data => {
+          if (data.code === ERR_OK) {
+            this.productsRankChartData = data.obj
+            return data
+          }
+        })
+      },
       ...mapActions([
         'fetchDetail'
       ])
@@ -184,6 +257,7 @@
     created () {
       if (!this.firstLogin) {
         this._concurrent()
+        this._concurrentChartData()
       }
     },
     mounted () {}

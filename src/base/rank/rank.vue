@@ -4,7 +4,7 @@
       <span class="title-left">
          {{title}}
       </span>
-      <span class="title-right">
+      <span class="title-right" @click="showChart">
       </span>
     </div>
     <table class="tad">
@@ -43,14 +43,6 @@ export default {
   },
   data () {
     return {
-      // title: '企业竞争力排行',
-      // ranking: [
-      //   {ranking: 1, company: '阿里巴巴', quantity: 21349},
-      //   {ranking: 2, company: '百度', quantity: 20411},
-      //   {ranking: 3, company: '腾讯', quantity: 20411},
-      //   {ranking: 4, company: '华为', quantity: 20411},
-      //   {ranking: 5, company: '小米', quantity: 20411}
-      // ],
       rankingclass: ['one', 'two', 'three', 'four', 'five']
     }
   },
@@ -59,6 +51,9 @@ export default {
   },
   watch: {},
   methods: {
+    showChart () {
+      this.$emit('showChart')
+    }
   },
   created () {},
   mounted () {}
@@ -84,7 +79,7 @@ html-font-size = 75px;
     display block
     width 90px
     height 90px
-    bg-image('report') 
+    bg-image('report')
     background-size 100% 100%
     extend-click()
 .tad
@@ -124,5 +119,5 @@ html-font-size = 75px;
       bg-image('four')
     .five
       bg-image('five')
-      
+
 </style>
