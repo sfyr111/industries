@@ -2,6 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 const apihost = process.env.NODE_ENV === 'production' ? '/industries' : 'http://61.147.125.60:9080/industries/'
+// const apihost = process.env.NODE_ENV === 'http://61.147.125.60:9080/industries/'
 
 axios.interceptors.request.use(function (config) {
   return config
@@ -125,7 +126,7 @@ export default {
   post (url, data) {
     return axios({
       method: 'post',
-      baseURL: apihost,
+      baseURL: 'http://61.147.125.60:9080/industries/',
       url,
       data: qs.stringify(data),
       timeout: 10000,

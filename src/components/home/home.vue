@@ -50,7 +50,7 @@
         productsRank: [],
         companyRankChartData: null,
         productsRankChartData: null,
-        startTime: dateFormat(Date.now() - 7 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
+        startTime: dateFormat(Date.now() - 365 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
         endTime: dateFormat(Date.now(), 'YYYY-MM-DD')
       }
     },
@@ -204,7 +204,7 @@
         const params = {
           count: 5,
           'query.startPoTime': `${this.startTime} 00:00:00`,
-          'query.endPoTime': `${this.endTime} 00:00:00`
+          'query.endPoTime': `${this.endTime} 23:59:59`
         }
         return await getCompanyRankingChart(params).then(data => {
           if (data.code === ERR_OK) {
@@ -216,7 +216,7 @@
         const params = {
           count: 5,
           'query.startPoTime': `${this.startTime} 00:00:00`,
-          'query.endPoTime': `${this.endTime} 00:00:00`
+          'query.endPoTime': `${this.endTime} 23:59:59`
         }
         return await getProductsRankingChart(params).then(data => {
           if (data.code === ERR_OK) {
@@ -228,7 +228,7 @@
         const params = {
           count: 5,
           'query.startPoTime': `${dateStartTime} 00:00:00`,
-          'query.endPoTime': `${dateEndTime} 00:00:00`
+          'query.endPoTime': `${dateEndTime} 23:59:59`
         }
         getCompanyRankingChart(params).then(data => {
           if (data.code === ERR_OK) {
@@ -241,7 +241,7 @@
         const params = {
           count: 5,
           'query.startPoTime': `${dateStartTime} 00:00:00`,
-          'query.endPoTime': `${dateEndTime} 00:00:00`
+          'query.endPoTime': `${dateEndTime} 23:59:59`
         }
         getProductsRankingChart(params).then(data => {
           if (data.code === ERR_OK) {
