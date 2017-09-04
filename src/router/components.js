@@ -4,6 +4,12 @@ export const Charts = resolve => {
   })
 }
 
+export const Exp = resolve => {
+  import('base/test/exp').then(module => {
+    resolve(module)
+  })
+}
+
 export const Test = resolve => {
   import('base/test/test').then(module => {
     resolve(module)

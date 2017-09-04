@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 
-const apihost = process.env.NODE_ENV === 'production' ? '/industries' : 'http://61.147.125.60:9080/industries/'
+// const apihost = process.env.NODE_ENV === 'production' ? '/industries' : 'http://61.147.125.60:9080/industries/'
 // const apihost = process.env.NODE_ENV === 'http://61.147.125.60:9080/industries/'
 
 axios.interceptors.request.use(function (config) {
@@ -33,7 +33,7 @@ function parseResponse (response) {
 
 function checkStatus ([status, statusText, data]) {
   if (status >= 200 && status < 300) {
-    return data.resp // 返回套的深
+    return data // 返回套的深
   } else {
     let error = new Error(statusText)
     error.status = status
@@ -140,7 +140,7 @@ export default {
   get (url, params) {
     return axios({
       method: 'get',
-      baseURL: apihost,
+      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       params, // get参数
       timeout: 10000,

@@ -1,9 +1,8 @@
 import * as types from './mutations-types'
 import { getDetail } from 'api'
+import { ERR_OK } from 'api/config'
 
 import { saveUserToken, saveUserId, saveVisited, saveSearch, deleteSearch, clearSearch } from 'common/js/cache'
-
-const ERR_OK = '000000'
 
 const _getDetail = async function (id) {
   const params = {
