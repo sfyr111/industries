@@ -29,7 +29,7 @@ export const saveUserSettings = async function (data = {}) {
   const url = '/industry/usersettings/save.do'
   const params = { userToken: store.getters.userToken, id: store.getters.userId, ...data }
 
-  const response = await api.get(url, params)
+  const response = await api.post(url, params)
   return response
 }
 
@@ -211,7 +211,7 @@ export const saveCollectArticles = async function (data = {}) {
   const url = '/comb/bookmark/save.do'
   const params = { userToken: store.getters.userToken, Classfi: 1, ...data }
 
-  const response = await api.get(url, params)
+  const response = await api.post(url, params)
   return response
 }
 
@@ -219,7 +219,7 @@ export const deleteCollectArticles = async function (data = {}) {
   const url = '/comb/bookmark/del.do'
   const params = { userToken: store.getters.userToken, ...data }
 
-  const response = await api.get(url, params)
+  const response = await api.post(url, params)
   return response
 }
 

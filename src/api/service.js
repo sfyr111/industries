@@ -126,10 +126,11 @@ export default {
   post (url, data) {
     return axios({
       method: 'post',
-      baseURL: 'http://61.147.125.60:9080/industries/',
+      // baseURL: 'http://61.147.125.60:9080/industries/',
+      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       data: qs.stringify(data),
-      timeout: 10000,
+      timeout: 20000,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
       }
@@ -143,7 +144,7 @@ export default {
       baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       params, // get参数
-      timeout: 10000,
+      timeout: 20000,
       headers: {
       }
     }).then(response => {
