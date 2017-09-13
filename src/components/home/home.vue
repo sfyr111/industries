@@ -50,7 +50,7 @@
         productsRank: [],
         companyRankChartData: null,
         productsRankChartData: null,
-        startTime: dateFormat(Date.now() - 365 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
+        startTime: dateFormat(Date.now() - 60 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
         endTime: dateFormat(Date.now(), 'YYYY-MM-DD')
       }
     },

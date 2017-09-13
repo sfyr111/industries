@@ -3,10 +3,15 @@
     <div class="analysis-settings" v-show="showFlag">
       <v-header :title="getTitle($route.params.item)" :back="hide"></v-header>
       <div class="date-range-wrapper">
-        <date-range :startTime="startTime" :endTime="endTime"></date-range>
+        <date-range :startTime="startTime" :endTime="endTime" @changeDate="onChangeDate"></date-range>
       </div>
       <div class="classify-tabs-wrapper">
-        <classify-tabs v-bind="$attrs"></classify-tabs>
+        <classify-tabs :checkerItem="$attrs.tabs" @selectedItem="onSelectedItem"></classify-tabs>
+      </div>
+      <div class="establish">
+        <p class="establish-font" @click="createPlan">
+          创建
+        </p>
       </div>
     </div>
   </transition>
@@ -15,7 +20,7 @@
 <script>
   import VHeader from 'components/v-header/v-header'
   import DateRange from 'base/date-range/date-range'
-  import ClassifyTabs from 'base/classify-tabs/classify-tabs'
+  import ClassifyTabs from 'base/classify-tabs/classify-tabs.vue'
 
   export default {
     name: 'analysis-settings',
@@ -26,7 +31,8 @@
       return {
         showFlag: false,
         startTime: '',
-        endTime: ''
+        endTime: '',
+        selectedItems: []
       }
     },
     computed: {
@@ -38,6 +44,24 @@
     },
     watch: {},
     methods: {
+      createPlan () {
+        const itemsObj = {
+          startTime: this.startTime,
+          endTime: this.endTime,
+          selectedItems: this.selectedItems
+        }
+        this.$emit('createPlan', itemsObj)
+      },
+      onChangeDate ({ dateStartTime, dateEndTime }) {
+        this.startTime = dateStartTime
+        this.endTime = dateEndTime
+      },
+      onSelectedItem (items) {
+        console.log(items)
+        this.$nextTick(() => {
+          this.selectedItems = items
+        })
+      },
       show () {
         this.showFlag = true
       },
@@ -79,7 +103,20 @@
     bottom 0
     left 0
     right 0
-
+    background-color: $color-background
+    .establish
+      display flex
+      align-items center
+      justify-content center
+    .establish-font
+      width 245px
+      height 80px
+      display flex
+      align-items center
+      justify-content center
+      color #ffffff
+      background #4799FE
+      border-radius 20px
   .slide-enter-active,
   .slide-leave-active
     transition all 0.3s

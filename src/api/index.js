@@ -9,7 +9,6 @@ import api from './service'
 export const apiTest = async function (data = {}) {
   const url = '/industry/sentiment/keyword/allkws.do'
   const params = { userToken: store.getters.userToken, ...data }
-
   const response = await api.post(url, params)
   return response
 }
@@ -241,6 +240,42 @@ export const judgeCollectArticles = async function (data = {}) {
 
 export const getDetail = async function (data = {}) {
   const url = '/comb/detail.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.get(url, params)
+  return response
+}
+
+/**
+ *
+ * analysisPlan
+ */
+export const createAnalysisPlan = async function (data = {}) {
+  const url = '/analysis/plan/insert.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.post(url, params)
+  return response
+}
+
+export const deleteAnalysisPlan = async function (data = {}) {
+  const url = '/analysis/plan/delete.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.delete(url, params)
+  return response
+}
+
+export const getAnalysisPlan = async function (data = {}) {
+  const url = '/analysis/plan/get.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.get(url, params)
+  return response
+}
+
+export const getRecommendAnalysisPlan = async function (data = {}) {
+  const url = '/analysis/recommendPlan/get.do'
   const params = { userToken: store.getters.userToken, ...data }
 
   const response = await api.get(url, params)

@@ -138,9 +138,37 @@ export default {
       return response
     }).then(parseResponse).then(checkStatus)
   },
+  patch (url, data) {
+    return axios({
+      method: 'patch',
+      // baseURL: 'http://61.147.125.60:9080/industries/',
+      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
+      url,
+      data: qs.stringify(data),
+      timeout: 20000,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      }
+    }).then(response => {
+      return response
+    }).then(parseResponse).then(checkStatus)
+  },
   get (url, params) {
     return axios({
       method: 'get',
+      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
+      url,
+      params, // get参数
+      timeout: 20000,
+      headers: {
+      }
+    }).then(response => {
+      return response
+    }).then(parseResponse).then(checkStatus)
+  },
+  delete (url, params) {
+    return axios({
+      method: 'delete',
       baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       params, // get参数

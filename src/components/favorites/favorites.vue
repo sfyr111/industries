@@ -28,81 +28,81 @@
 </template>
 
 <script>
-import Block from 'base/block/block'
-import Scroll from 'base/scroll/scroll'
-import Loading from 'base/loading/loading'
-import ListCell from 'base/list-cell/list-cell'
-import VHeader from 'components/v-header/v-header'
-import { ERR_OK } from 'api/config'
-import { getCollectArticles, deleteCollectArticles } from 'api'
-import { mapActions } from 'vuex'
-import { Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
+  import Block from 'base/block/block'
+  import Scroll from 'base/scroll/scroll'
+  import Loading from 'base/loading/loading'
+  import ListCell from 'base/list-cell/list-cell'
+  import VHeader from 'components/v-header/v-header'
+  import { ERR_OK } from 'api/config'
+  import { getCollectArticles, deleteCollectArticles } from 'api'
+  import { mapActions } from 'vuex'
+  import { Swipeout, SwipeoutItem, SwipeoutButton } from 'vux'
 
-export default {
-  name: 'favorites',
-  mixins: [],
-  data () {
-    return {
-      list: [],
-      isLoading: false
-    }
-  },
-  computed: {},
-  components: {
-    Block,
-    Scroll,
-    VHeader,
-    Loading,
-    ListCell,
-    Swipeout,
-    SwipeoutItem,
-    SwipeoutButton
-  },
-  watch: {},
-  methods: {
-    _getCollectArticles () {
-      this.isLoading = true
-      getCollectArticles().then(data => {
-        if (data.code === ERR_OK) {
-          this.list = data.list
-          this.isLoading = false
-          return data
-        }
-      })
-    },
-    _deleteCollectArticles (item) {
-      const params = {
-        id: item.id
+  export default {
+    name: 'favorites',
+    mixins: [],
+    data () {
+      return {
+        list: [],
+        isLoading: false
       }
-      deleteCollectArticles(params).then(data => {
-        if (data.code === ERR_OK) {
-          this.$vux.toast.show({
-            text: '删除成功',
-            time: 500,
-            type: 'success'
-          })
-          const index = this.list.findIndex(value => {
-            return item.id === value.id
-          })
-          this.list.splice(index, 1)
+    },
+    computed: {},
+    components: {
+      Block,
+      Scroll,
+      VHeader,
+      Loading,
+      ListCell,
+      Swipeout,
+      SwipeoutItem,
+      SwipeoutButton
+    },
+    watch: {},
+    methods: {
+      _getCollectArticles () {
+        this.isLoading = true
+        getCollectArticles().then(data => {
+          if (data.code === ERR_OK) {
+            this.list = data.list
+            this.isLoading = false
+            return data
+          }
+        })
+      },
+      _deleteCollectArticles (item) {
+        const params = {
+          id: item.id
         }
-      })
+        deleteCollectArticles(params).then(data => {
+          if (data.code === ERR_OK) {
+            this.$vux.toast.show({
+              text: '删除成功',
+              time: 500,
+              type: 'success'
+            })
+            const index = this.list.findIndex(value => {
+              return item.id === value.id
+            })
+            this.list.splice(index, 1)
+          }
+        })
+      },
+      selectItem (item) {
+        this.fetchDetail(item)
+      },
+      deleteItem (item) {
+        this._deleteCollectArticles(item)
+      },
+      ...mapActions([
+        'fetchDetail'
+      ])
     },
-    selectItem (item) {
-      this.fetchDetail(item)
+    created () {
+      this._getCollectArticles()
     },
-    deleteItem (item) {
-      this._deleteCollectArticles(item)
-    },
-    ...mapActions([
-      'fetchDetail'
-    ])
-  },
-  created () {
-    this._getCollectArticles()
-  },
-  mounted () {}
-}
+    mounted () {}
+  }
 </script>
 
 <style lang="stylus" scoped>
@@ -110,7 +110,7 @@ export default {
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
   html-font-size = 75px;
-  
+
   .favorites
     position fixed
     top 0
@@ -137,7 +137,7 @@ export default {
     top 50%
     left 50%
     transform translate3d(-50%, -50%, 0)
-  
+
   .slide-enter-active,
   .slide-leave-active
     transition all 0.3s
