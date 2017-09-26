@@ -22,8 +22,8 @@
       <button @click="_getIndustryClassify">getIndustryClassify</button>
       <button @click="_getCompanyClassify">getCompanyClassify</button>
       <button @click="_getProductClassify">getProductClassify</button>
-      <button @click="_getTenderClassify">getTenderClassify</button>
       <button @click="ztg">ztg</button>
+      <button @click="getAccountInfo">getAccountInfo</button>
     </div>
   </div>
 </template>
@@ -48,12 +48,12 @@
           getCompanyTrend,
           getProductTrend,
           getTenderTrend,
-          getProductClassify,
-          getTenderClassify
+          getProductClassify
         } from 'api'
   import { mapActions } from 'vuex'
   import { ERR_OK } from 'api/config'
   import axios from 'axios'
+  import vrv from 'common/js/vrv-jssdk'
 
   export default {
     name: 'app',
@@ -61,6 +61,15 @@
       return {}
     },
     methods: {
+      getAccountInfo () {
+        vrv.ready(() => {
+          vrv.jssdk.getAccountInfo({
+            success: function (data) {
+              alert(data)
+            }
+          })
+        })
+      },
       ztg () {
         axios({
           url: 'http://localhost:9000/ztg',
@@ -287,17 +296,6 @@
           // count: 5
         }
         return await getProductClassify(params).then(data => {
-          if (data.code === ERR_OK) {
-            console.log(data)
-            return data
-          }
-        })
-      },
-      async _getTenderClassify () {
-        const params = {
-          // count: 5
-        }
-        return await getTenderClassify(params).then(data => {
           if (data.code === ERR_OK) {
             console.log(data)
             return data

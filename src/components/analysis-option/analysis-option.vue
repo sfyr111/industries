@@ -6,43 +6,67 @@
           新建
         </div>
       </v-header>
-      <plan-list :planList="planList" :recommendPlanList="recommendPlanList" @deletePlan="_deleteAnalysisPlan"></plan-list>
-      <analysis-settings :tabs="tabs"
-      ref="analysisSettings" @createPlan="onCreatePlan"></analysis-settings>
+      <plan-list :planList="planList"
+                 :recommendPlanList="recommendPlanList"
+                 :isShowLoading="isShowLoading"
+                 @deletePlan="_deleteAnalysisPlan"
+                 @modifyPlan="_modifyPlan"
+                 @selectedItem="_selectedItem"></plan-list>
+      <analysis-settings
+        v-if="showSetting"
+        :tabs="tabs"
+        ref="analysisSettings"
+        @createPlan="onCreatePlan"
+        @modifyPlan="_modifyAnalysisPlan"
+        @show="showSettings"
+        @hide="hideSettings">
+      </analysis-settings>
+      <router-view></router-view>
     </div>
   </transition>
 </template>
 
 <script>
   import VHeader from 'components/v-header/v-header'
-  import AnalysisSettings from 'components/analysis-settings/analysis-settings'
   import PlanList from 'base/plan-list/plan-list'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { ERR_OK } from 'api/config'
-  import { getCompanyList, getProductClassify, getTenderClassify, createAnalysisPlan, getAnalysisPlan, getRecommendAnalysisPlan, deleteAnalysisPlan } from 'api'
+  import { getCompanyList, getProductClassify, getTenderProductsClassify, getTenderCompanyClassify, createAnalysisPlan, getAnalysisPlan, getRecommendAnalysisPlan, deleteAnalysisPlan, modifyAnalysisPlan } from 'api'
 
   export default {
     name: 'analysis-option',
     mixins: [],
     data () {
       return {
+        showSetting: false,
         tabs: [],
         planList: [],
-        recommendPlanList: []
+        recommendPlanList: [],
+        isShowLoading: false
       }
     },
     computed: {
       ...mapGetters([
         'analysisItem'
-      ])
+      ]),
+      ...mapGetters({
+        modifyItem: 'analysis/modifyItem'
+      })
     },
     components: {
       VHeader,
       PlanList,
-      AnalysisSettings
+      AnalysisSettings: () => import('components/analysis-settings/analysis-settings')
     },
     watch: {},
     methods: {
+      ...mapMutations({
+        setModifyItem: 'analysis/SET_MODIFY_ITEM',
+        setSelectedItem: 'analysis/SET_SELECTED_ITEM'
+      }),
+      showLoading (boolean) {
+        this.isShowLoading = boolean
+      },
       /**
        * 获取设置总参数
        * @param {object} obj
@@ -58,8 +82,12 @@
             obj.tag = 2
             return await this._createAnalysisPlan(obj)
           }
-          case 'tender': {
+          case 'tenderProduct': {
             obj.tag = 3
+            return await this._createAnalysisPlan(obj)
+          }
+          case 'tenderCompany': {
+            obj.tag = 4
             return await this._createAnalysisPlan(obj)
           }
           default: {
@@ -67,44 +95,13 @@
           }
         }
       },
-      /**
-       * 创建计划
-       * @param {String} startTime
-       * @param {String} endTime
-       * @param {object[]} selectedItems
-       * @param {Number} tag
-       * @returns {Promise.<*>}
-       * @private
-       */
-      async _createAnalysisPlan ({ startTime, endTime, selectedItems, tag }) {
-        const planTitle = selectedItems.map(item => {
-          return item.name
-        }).join('、')
-        const params = {
-          tag,
-          q: JSON.stringify(selectedItems),
-          name: planTitle, // 计划名,
-          endPoTime: endTime + ' 23:59:59',
-          startPoTime: startTime + ' 00:00:00'
-        }
-        return await createAnalysisPlan(params)
-          .then(data => {
-            if (data.code === ERR_OK) return data
-            else return Promise.reject()
-          })
-          .then(this._getAnalysisPlan)
-          .then(data => {
-            if (data.code === ERR_OK) {
-              const { list: planList } = data
-              this.planList = planList
-              this.$vux.toast.show({
-                text: '添加成功',
-                time: 500,
-                type: 'success'
-              })
-              this.$refs.analysisSettings.hide()
-            }
-          })
+      _selectedItem (item) {
+        this.setSelectedItem(item)
+        this.$router.push(`/analysis/${this.analysisItem}/${item.id}`)
+      },
+      _modifyPlan (item) {
+        this.setModifyItem(item)
+        this.showSettings()
       },
       async _deleteAnalysisPlan (id) {
         const params = {
@@ -129,6 +126,76 @@
             }
           })
       },
+      /**
+       * 创建计划
+       * @param {String} startTime
+       * @param {String} endTime
+       * @param {object[]} selectedItems
+       * @param {Number} tag
+       * @returns {Promise.<*>}
+       * @private
+       */
+      async _createAnalysisPlan ({ startTime, endTime, selectedItems, tag }) {
+        const planTitle = selectedItems.map(item => {
+          return item.name
+        }).join('、') + '的对比分析'
+        const params = {
+          tag,
+          q: JSON.stringify(selectedItems),
+          name: planTitle, // 计划名,
+          endPoTime: endTime + ' 23:59:59',
+          startPoTime: startTime + ' 00:00:00'
+        }
+        return await createAnalysisPlan(params)
+          .then(data => {
+            if (data.code === ERR_OK) return data
+            else return Promise.reject()
+          })
+          .then(this._getAnalysisPlan)
+          .then(data => {
+            if (data.code === ERR_OK) {
+              const { list: planList } = data
+              this.planList = planList
+              this.$vux.toast.show({
+                text: '添加成功',
+                time: 500,
+                type: 'success'
+              })
+              this.hideSettings()
+            }
+          })
+      },
+      async _modifyAnalysisPlan ({ startTime, endTime, selectedItems }) {
+        const planTitle = selectedItems.map(item => {
+          return item.name
+        }).join('、') + '的对比分析'
+        const params = {
+          id: this.modifyItem.id,
+          tag: this.modifyItem.tag,
+          q: JSON.stringify(selectedItems),
+          name: planTitle, // 计划名,
+          endPoTime: endTime + ' 23:59:59',
+          startPoTime: startTime + ' 00:00:00'
+        }
+        return await modifyAnalysisPlan(params)
+          .then(data => {
+            if (data.code === ERR_OK) return data
+            else return Promise.reject()
+          })
+          .then(this._getAnalysisPlan)
+          .then(data => {
+            if (data.code === ERR_OK) {
+              const { list: planList } = data
+              this.planList = planList
+              this.$vux.toast.show({
+                text: '修改成功',
+                time: 500,
+                type: 'success'
+              })
+              this.hideSettings()
+            }
+          })
+      },
       async _getAnalysisPlan () {
         const params = {
           tag: ''
@@ -142,8 +209,13 @@
             params.tag = 2
             return await getAnalysisPlan(params)
           }
-          case 'tender': {
+          case 'tenderProduct': {
             params.tag = 3
+            return await getAnalysisPlan(params)
+          }
+          case 'tenderCompany': {
+            params.tag = 4
+            console.log(params.tag)
             return await getAnalysisPlan(params)
           }
           default: {
@@ -151,33 +223,49 @@
           }
         }
       },
-      async _getRecommendAnalysisPlan () {
-        const params = {
-          tag: ''
-        }
+      async _getRecommendTagAnalysisPlan () {
+        let tag
         switch (this.analysisItem) {
           case 'company': {
-            params.tag = 1
-            return await getRecommendAnalysisPlan(params)
+            tag = 1
+            return await this._getRecommendAnalysisPlan(tag)
           }
           case 'product': {
-            params.tag = 2
-            return await getRecommendAnalysisPlan(params)
+            tag = 2
+            return await this._getRecommendAnalysisPlan(tag)
           }
-          case 'tender': {
-            params.tag = 3
-            return await getRecommendAnalysisPlan(params)
+          case 'tenderProduct': {
+            tag = 3
+            return await this._getRecommendAnalysisPlan(tag)
+          }
+          case 'tenderCompany': {
+            tag = 4
+            return await this._getRecommendAnalysisPlan(tag)
           }
           default: {
             return await ''
           }
         }
       },
+      async _getRecommendAnalysisPlan (tag) {
+        const params = {
+          tag
+        }
+        this.showLoading(true)
+        return await getRecommendAnalysisPlan(params).then(data => {
+          if (data.code === ERR_OK) {
+            this.showLoading(false) // 当没设置推荐计划同时又没设置个人计划时关闭loading
+            return data
+          }
+        })
+      },
       hideSettings () {
-        this.$refs.analysisSettings.hide()
+        this.showSetting = false
+//        this.$refs.analysisSettings.hide()
       },
       showSettings () {
-        this.$refs.analysisSettings.show()
+        this.showSetting = true
+//        this.$refs.analysisSettings.show()
       },
       async _getCompanyList () {
         const params = {
@@ -197,10 +285,19 @@
           }
         })
       },
-      async _getTenderClassify () {
+      async _getTenderProductsClassify () {
         const params = {
         }
-        return await getTenderClassify(params).then(data => {
+        return await getTenderProductsClassify(params).then(data => {
+          if (data.code === ERR_OK) {
+            return data
+          }
+        })
+      },
+      async _getTenderCompanyClassify () {
+        const params = {
+        }
+        return await getTenderCompanyClassify(params).then(data => {
           if (data.code === ERR_OK) {
             return data
           }
@@ -214,8 +311,11 @@
           case 'product': {
             return await this._getProductClassify()
           }
-          case 'tender': {
-            return await this._getTenderClassify()
+          case 'tenderProduct': {
+            return await this._getTenderProductsClassify()
+          }
+          case 'tenderCompany': {
+            return await this._getTenderCompanyClassify()
           }
           default: {
             return await ''
@@ -224,7 +324,7 @@
       },
       async _concurrent () {
         if (!this.analysisItem) this.$router.push('/analysis')
-        const data = await Promise.all([this._getClassify(this.analysisItem), this._getAnalysisPlan(), this._getRecommendAnalysisPlan()])
+        const data = await Promise.all([this._getClassify(this.analysisItem), this._getAnalysisPlan(), this._getRecommendTagAnalysisPlan()])
 
         const [{ list: tabs },
                { list: planList },
@@ -244,8 +344,11 @@
           case 'product': {
             return '产品分析'
           }
-          case 'tender': {
-            return '招标分析'
+          case 'tenderProduct': {
+            return '产品招标分析'
+          }
+          case 'tenderCompany': {
+            return '企业招标分析'
           }
           default: {
             return ''

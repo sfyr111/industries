@@ -1,5 +1,5 @@
 <template>
-  <div class="tab">
+  <div class="tab" v-show="show">
     <router-link tag="div" class="tab-item" to="/home">
       <i class="tab-icon"></i>
       <span class="tab-link">首页</span>
@@ -24,7 +24,9 @@
     name: 'tab',
     mixins: [],
     data () {
-      return {}
+      return {
+        show: true
+      }
     },
     computed: {},
     components: {
@@ -33,7 +35,18 @@
     methods: {
     },
     created () {},
-    mounted () {}
+    mounted () {
+      var winHeight = window.innerHeight
+      window.addEventListener('resize', (e) => {
+        var tempHeight = window.innerHeight
+        if (tempHeight < winHeight) {
+          this.show = false
+        } else this.show = true
+      })
+    },
+    beforeDestory () {
+      window.removeEventListener('resize', this, false)
+    }
   }
 </script>
 
@@ -44,10 +57,11 @@
   html-font-size = 75px;
 
   .tab
-    // position: fixed
-    // bottom: 0
-    // left: 0
-    // right: 0
+  /*position fixed
+    bottom 0
+    left 0
+    right 0*/
+    /*position: relative*/
     overflow: hidden
     display: flex
     justify-content: space-around

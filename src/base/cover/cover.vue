@@ -10,11 +10,11 @@
       </div>
       <div class="explain">
         <p>我们会根据你设置的信息</p>
-        <p>展示及时的消息并给予专业的分析</p> 
+        <p>展示及时的消息并给予专业的分析</p>
       </div>
       <div class="footer">
         <div class="btn" @click="showFlag=false">
-          马上去设置
+          立即体验
         </div>
       </div>
     </div>
@@ -44,6 +44,7 @@ export default {
     bottom 0
     left 0
     right 0
+    z-index 150
     background-color #fff
     .title
       display flex
@@ -73,12 +74,12 @@ export default {
       color $color-text-d
       font-size 28px
       line-height 40px
-    >.footer 
+    >.footer
       height 150px
       display flex
       justify-content center
       // align-items center
-      >.btn 
+      >.btn
         width 240px
         height 80px
         background #4799FE

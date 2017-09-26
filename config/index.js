@@ -38,7 +38,7 @@ module.exports = {
   devServer: {
     historyApiFallbak: true,
     hot: true,
-    host: '192.168.137.140',
+    host: '192.168.137.60',
     port: 7000,
     inline: true,
     progress: true

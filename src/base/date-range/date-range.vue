@@ -40,16 +40,29 @@
     watch: {},
     methods: {
       setStartTime () {
+//        if (!this.checkTime()) return
         this.$emit('changeDate', {
           dateStartTime: this.dateStartTime,
           dateEndTime: this.dateEndTime
         })
       },
       setEndTime () {
+//        if (!this.checkTime()) return
         this.$emit('changeDate', {
           dateStartTime: this.dateStartTime,
           dateEndTime: this.dateEndTime
         })
+      },
+      checkTime () {
+        if (Date.parse(this.dateStartTime) >= Date.parse(this.dateEndTime)) {
+          this.$vux.toast.show({
+            text: '起始时间必须小于结束时间',
+            time: 1000,
+            type: 'warn'
+          })
+          return false
+        }
+        return true
       }
     },
     created () {

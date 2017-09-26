@@ -1,8 +1,8 @@
 <template>
   <transition name="inUp">
-    <div class="person-sertting" v-show="showFlag">
+    <div class="person-sertting">
       <div class="title">
-          <span>设置你的信息</span>
+        <span>设置你的信息</span>
       </div>
       <div class="center">
         <div class="top">
@@ -14,61 +14,58 @@
         <div class="bottom">
           <group class="bottom-group">
             <popup-picker title="我所在的行业"
-            :data="industryOption"
-            :columns="1"
-            placeholder="请选择"
-            v-model="industry"
-            @on-hide="shadeHide"
-            show-name
-            ref="industryPicker"></popup-picker>
+                          :data="industryOption"
+                          :columns="1"
+                          placeholder="请选择"
+                          v-model="industry"
+                          @on-hide="shadeHide"
+                          show-name
+                          ref="industryPicker"></popup-picker>
             <div class="company-box">
               <popup-picker title="我的公司"
-              :data="companyOption"
-              :columns="1"
-              placeholder="请选择"
-              v-model="company"
-              show-name
-              ref="companyPicker"></popup-picker>
+                            :data="companyOption"
+                            :columns="1"
+                            placeholder="请选择"
+                            v-model="company"
+                            show-name
+                            ref="companyPicker"></popup-picker>
               <div class="company-shade" v-show="shade" @click="verify"></div>
             </div>
             <popup-picker title="我的职务" :data="jobOption" placeholder="请选择" v-model="job" ></popup-picker>
           </group>
-            <!--<x-input :max="6" :min="6"  on-change="change" placeholder="" title="请输入6位数字" type="text"></x-input>-->
+          <!--<x-input :max="6" :min="6"  on-change="change" placeholder="" title="请输入6位数字" type="text"></x-input>-->
         </div>
       </div>
       <div class="footer">
         <div class="btn" @click="back">
-            取消
+          取消
         </div>
-        <div class="btn" @click="entry">
-            保存
+        <div class="btn" @click="isShowConfirm=true">
+          保存
         </div>
       </div>
       <div>
-        <alert v-model="show" :title="''"  @on-hide="onHide">请选择行业</alert>
+        <alert v-model="show" :title="''"  @on-hide="onHide">请先选择行业</alert>
+        <confirm v-model="isShowConfirm"
+                 :title="'是否修改设置并重新进入'"
+                 @on-cancel="isShowConfirm=false"
+                 @on-confirm="saveAndEsc">
+        </confirm>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
-  import { Alert, Group, XInput, PopupPicker } from 'vux'
-  import { getIndustryList, getCompanyList, saveUserSettings, getUserSettings } from 'api'
+  import vrv from 'common/js/vrv-jssdk'
   import { ERR_OK } from 'api/config'
   import { mapMutations, mapGetters } from 'vuex'
+  import { Alert, Group, XInput, PopupPicker, Confirm } from 'vux'
+  import { getIndustryList, getCompanyList, saveUserSettings, getUserSettings } from 'api'
 
   export default {
-    name: 'personage',
-    props: {
-      showFlag: {
-        type: Boolean,
-        default: true
-      },
-      userSettings: {
-        type: Object,
-        default: null
-      }
-    },
+    name: 'personal',
+    props: {},
     data () {
       return {
         show: false,
@@ -82,9 +79,10 @@
         industryId: 1,
         companyOption: [],
         company: [],
-        companyId: null,
+        companyId: 1,
         jobOption: [['基层', '中层', '高层']],
-        job: []
+        job: [],
+        isShowConfirm: false
       }
     },
     computed: {
@@ -96,6 +94,7 @@
       Alert,
       Group,
       XInput,
+      Confirm,
       PopupPicker
     },
     watch: {
@@ -103,7 +102,9 @@
         newValue = newValue.toString()
         const id = this.getId(this.industryOption, newValue, (item) => item.value === newValue)
         this.industryId = id
-        this._getCompanyList(id)
+        this.$nextTick(() => {
+          this._getCompanyList(id)
+        })
       },
       company (newValue) {
         newValue = newValue.toString()
@@ -118,7 +119,8 @@
         }
       },
       back () {
-        window.history.back()
+//        window.history.back()
+        this.$emit('hideSettings')
       },
       onHide () {
       },
@@ -158,11 +160,18 @@
         })
       },
       entry () {
-        this._saveUserSettings().then(this._getUserSettings().then(data => {
-          // network 延迟 手动隐藏引导
-          // this.setFirstLogin(data)
-          this.setFirstLogin(false)
-        }))
+        this._saveUserSettings()
+      },
+      saveAndEsc () {
+        this._saveUserSettings().then(() => {
+          try {
+            // 关闭
+            vrv.jssdk.closeView({})
+          } catch (e) {
+            console.warn(e)
+            window.location.href = process.env.NODE_ENV !== 'production' ? `http://localhost:7000/?userToken=${this.userToken}` : `http://61.147.125.60:3002/?userToken=${this.userToken}`
+          }
+        })
       },
       async _saveUserSettings () {
         const params = {
@@ -173,15 +182,27 @@
           job: this.job[0],
           firstlogin: this.userToken === '1235' || false
         }
-        saveUserSettings(params).then(data => {
+        const data = await saveUserSettings(params).then(data => {
           if (data.code === ERR_OK) {
             console.info('设置成功')
           }
         })
+        return data
       },
       async _getUserSettings () {
         const data = await getUserSettings().then(data => {
-          return data.obj.firstlogin
+          if (data.code === ERR_OK) {
+//            if (data.obj.age === '未设置') return
+//            else this.age = [data.obj.age]
+//            if (data.obj.sex === '未设置') return
+//            else this.sex = [data.obj.sex]
+//            this.job = [data.obj.job]
+//            this.company = [data.obj.companyName]
+//            this.companyId = Number(data.obj.companyid)
+//            this.industry = [data.obj.industryName]
+//            this.industryId = Number(data.obj.id)
+          }
+          return data.obj
         })
         return data
       },
@@ -191,6 +212,7 @@
     },
     created () {
       this._getIndustryList()
+      this._getUserSettings()
     },
     mounted () {
     }
@@ -209,9 +231,9 @@
     bottom 0
     left 0
     right 0
-    z-index 50
+    z-index 100
     background $color-background
-    >.title
+    > .title
       width 750px
       height 130px
       color #429AFF
@@ -219,8 +241,7 @@
       justify-content center
       align-items center
       font-size 46px
-      // margin-bottom 90px
-    >.center
+    > .center
       font-size 30px
       .top
         margin-bottom 26px
@@ -237,12 +258,12 @@
         .bottom-group
           .weui-label
             width 3rem
-    >.footer
+    > .footer
       height 433px
       display flex
       justify-content space-around
       align-items center
-      >.btn
+      > .btn
         width 240px
         height 80px
         background #4799FE
@@ -260,10 +281,12 @@
         border-top none
       &:nth-child(3)
         border-top none
-    .inUp-enter-active,
-    .inUp-leave-active
-      transition all .3s
-    .inUp-enter,
-    .inUp-leave-to
-      transform translate3d(0, 100%, 0)
+
+  .inUp-enter-active,
+  .inUp-leave-active
+    transition all .3s
+  .inUp-enter,
+  .inUp-leave-to
+    transform translate3d(0, 100%, 0)
 </style>
+

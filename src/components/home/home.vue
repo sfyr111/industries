@@ -3,8 +3,8 @@
     <v-header title="首页" :close="true" :back="back">
       <router-link tag="i" to="/user" class="user-icon" slot="right"></router-link>
     </v-header>
-    <scroll class="info" :data="scrollData">
-      <div v-show="size">
+    <scroll class="info" :data="scrollData" :refreshDelay="200">
+      <div v-show="size" class="scroll">
         <block></block>
         <hotspot :list="hotspotGroup" @select="selectItem" ref="hotspot"></hotspot>
         <tab-page :data="tenderGroup" @select="selectItem" title="招标信息" ref="tenderClassifyList"></tab-page>
@@ -225,6 +225,14 @@
         })
       },
       _changeCompanyRankingChart ({ dateStartTime, dateEndTime }) {
+        if (Date.parse(dateStartTime) >= Date.parse(dateEndTime)) {
+          this.$vux.toast.show({
+            text: '起始时间必须小于结束时间',
+            time: 500,
+            type: 'warn'
+          })
+          return
+        }
         const params = {
           count: 5,
           'query.startPoTime': `${dateStartTime} 00:00:00`,
@@ -275,6 +283,9 @@
     overflow: auto
     width 100%
     height calc(100% - 48px)
+/*    .scroll
+      height: calc(100% - 1.28rem)
+      overflow: auto*/
     .info
       overflow hidden
       height calc(100% - 1.436667rem)

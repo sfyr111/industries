@@ -81,3 +81,9 @@ export const AnalysisOption = resolve => {
     resolve(module)
   })
 }
+
+export const AnalysisDetail = resolve => {
+  import('components/analysis-detail/analysis-detail').then(module => {
+    resolve(module)
+  })
+}

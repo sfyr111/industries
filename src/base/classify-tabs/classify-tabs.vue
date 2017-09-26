@@ -1,19 +1,20 @@
 <template>
   <div class="classify-tabs">
     <div class="checker-box">
-      <checker v-model="selectedItem" type="checkbox" default-item-class="default-item" selected-item-class="selected-item">
+      <checker :max="5" v-model="selectedItem" type="checkbox" default-item-class="default-item" selected-item-class="selected-item">
         <checker-item :value="item" v-for="( item , index ) in checkerItem" :key="index" @on-item-click="onItemClick">{{item.name}}</checker-item>
       </checker>
     </div>
-    <div class="selected-box">
-      <selected-enterprise :selectedItem = "selectedItem"></selected-enterprise>
-    </div>
+    <!--<div class="selected-box">-->
+      <!--<selected-classify-tabs :selectedItem = "selectedItem"></selected-classify-tabs>-->
+    <!--</div>-->
   </div>
 </template>
 
 <script>
   import { Checker, CheckerItem } from 'vux'
-  import SelectedEnterprise from 'base/selected-classify-tabs/selected-classify-tabs'
+  import { mapGetters } from 'vuex'
+  import SelectedClassifyTabs from 'base/selected-classify-tabs/selected-classify-tabs'
 
   export default {
     name: 'classify-tabs',
@@ -28,21 +29,40 @@
         selectedItem: []
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        modifyItem: 'analysis/modifyItem'
+      })
+    },
     components: {
       Checker,
       CheckerItem,
-      SelectedEnterprise
+      SelectedClassifyTabs
     },
     watch: {},
     methods: {
       onItemClick () {
         this.$nextTick(() => {
+          this.checkItem(this.selectedItem)
           this.$emit('selectedItem', this.selectedItem)
         })
+      },
+      checkItem (selectedItem) {
+        if (selectedItem.length === 5) {
+          this.$vux.toast.show({
+            text: '最多只能选择五项进行对比',
+            time: 500,
+            type: 'text',
+            position: 'top'
+          })
+        }
       }
     },
     created () {
+      if (this.modifyItem.q) {
+        this.selectedItem = JSON.parse(this.modifyItem.q)
+        this.$emit('modifyItem', this.selectedItem)
+      }
     },
     mounted () {}
   }
@@ -60,17 +80,17 @@
       margin-top 50px
       background #fff
       min-height 200px
-      max-height 9rem
+      max-height 12rem
       overflow-y auto
-      border-top 1px solid #e8e8e8
-      border-image: linear-gradient(#e8e8e8, transparent) 30 30
+      // border-top 1px solid #e8e8e8
+      // border-image: linear-gradient(#e8e8e8, transparent) 30 30
     .vux-checker-box
-      height 9rem
+      height 12rem
       display flex
       flex-wrap wrap
       align-content flex-start
-      border-bottom 1px solid #e8e8e8
-      border-image: linear-gradient(transparent, #e8e8e8) 30 30
+      // border-bottom 1px solid #e8e8e8
+      // border-image: linear-gradient(transparent, #e8e8e8) 30 30
     .default-item
       width 160px
       height 60px

@@ -1,4 +1,5 @@
 import { throttle } from 'common/js/util'
+import { dateFormat } from 'vux'
 
 const hold = 4000
 
@@ -32,6 +33,14 @@ export const chartDataMixin = {
         obj.rows.push(o)
       }
       return obj
+    }
+  }
+}
+
+export const dateMixin = {
+  filters: {
+    formatDate: function (date) {
+      return dateFormat(date, 'YYYY-MM-DD')
     }
   }
 }

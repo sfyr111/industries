@@ -4,7 +4,7 @@
       <router-view></router-view>
     </keep-alive>
     <tab></tab>
-    <div class="guidance-warpper">
+    <div class="guidance-warpper" v-show="$route.path !== '/test'">
       <guidance ref="guidance" @entry="entry" :showFlag="firstLogin"></guidance>
     </div>
     <detail :detail="detail"></detail>
@@ -59,11 +59,14 @@
         vrv.ready(() => {
           try {
             vrv.jssdk.showNavigationBar({ show: false })
-          } catch (err) {}
+          } catch (err) {
+            alert(err.message)
+          }
         })
       },
       ...mapActions([
-        'saveId'
+        'saveId',
+        'saveUser'
       ]),
       ...mapMutations({
         'setFirstLogin': 'SET_FIRST_LOGIN'

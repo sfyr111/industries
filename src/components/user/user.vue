@@ -6,7 +6,7 @@
         <router-link tag="div" to="/user/personal" class="option-box">
           <div class="option-left">
             <i class="userMessage"></i>
-            <span class="option-txt">修改个人设置</span>
+            <span class="option-txt">个人信息</span>
           </div>
           <i class="option-back"></i>
         </router-link>
@@ -20,7 +20,7 @@
         <router-link to='/user/help' tag="div" class="option-box" >
           <div class="option-left">
             <i class="help"></i>
-            <span class="option-txt">帮助</span>
+            <span class="option-txt">关于</span>
           </div>
           <i class="option-back"></i>
         </router-link>

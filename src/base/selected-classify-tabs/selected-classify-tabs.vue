@@ -25,9 +25,9 @@
     data () {
       return {
         swiperOption: {
-          slidesPerView: 3.6,
+          slidesPerView: 4,
           paginationClickable: true,
-          spaceBetween: 20,
+          spaceBetween: 5,
           freeMode: true
         }
       }

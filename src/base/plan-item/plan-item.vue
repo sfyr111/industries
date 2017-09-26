@@ -2,7 +2,7 @@
    <div class="plan-item">
       <div class="list-left" v-show="item.recomand"></div>
       <div class="list-content" :class="{'list-item-silde': !item.recomand}">
-        <div class="item-title">
+        <div class="item-title" @click="selectedItem">
           <section>
             <span class="recommend" v-show="item.recomand">【推荐】</span>
             <span class="title-font">{{item.name}}</span>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import { dateFormat } from 'vux'
+  import { dateMixin } from 'common/js/mixin'
 
   export default {
     name: 'plan-item',
@@ -32,7 +32,7 @@
         default: ''
       }
     },
-    mixins: [],
+    mixins: [dateMixin],
     data () {
       return {}
     },
@@ -41,18 +41,17 @@
     watch: {},
     methods: {
       modifyItem () {
-        this.$emit('modifyPlan')
+        this.$emit('modifyPlan', this.item)
       },
       deleteItem () {
         this.$emit('deletePlan', this.item.id)
+      },
+      selectedItem () {
+        this.$emit('selectedItem', this.item)
       }
     },
-    filters: {
-      formatDate: function (date) {
-        return dateFormat(date, 'YYYY-MM-DD')
-      }
+    created () {
     },
-    created () {},
     mounted () {}
   }
 </script>
@@ -69,27 +68,33 @@
     display flex
     //height 238px
     .list-left
-      width 8px
+      width 10px
       background #FF0000
     .list-content
-      width 742px
+      width 705px
       padding 0 20px 0 15px
+      // box-sizing border-box
+      // border-top 1px solid #979797
+      // border-bottom 1px solid #979797
     .list-item-silde
-      padding-left 20px
+      padding-left 35px
     .item-title
       display flex
-      align-items center
+      // align-items center
       justify-content space-between
       padding-right 20px
-      height 70px
+      min-height 70px
       // font-size 30px
       > section
-        overflow hidden
-        text-overflow ellipsis
-        white-space nowrap
-        width 7rem
+        // overflow hidden
+        // text-overflow ellipsis
+        // white-space nowrap
+        width 652px
       .recommend
         color red
+      section
+        padding-top 10px
+        line-height 45px
       .title-icon
         width 40px
         height 60px
@@ -120,8 +125,9 @@
         border 1px solid #4799FE
         box-sizing border-box
         border-radius 8px
+        margin-right 20px
         &.button-color
           color #fff
           background #4799FE
-          margin-right 20px
+          
 </style>

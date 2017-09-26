@@ -3,15 +3,15 @@
     <div class="dynamic-detail">
       <v-header :title="dynamicItem.title" class="header"></v-header>
       <div class="list-wrapper">
-        <list :list="list" 
-              :pullup="pullup" 
-              :pulldown="pulldown" 
-              :hasMore="hasMore" 
+        <list :list="list"
+              :pullup="pullup"
+              :pulldown="pulldown"
+              :hasMore="hasMore"
               :hasRefresh="hasRefresh"
-              :reveal="reveal" 
+              :reveal="reveal"
               @scroll=""
-              @refresh="_refresh" 
-              @loadMore="_loadMore" 
+              @refresh="_refresh"
+              @loadMore="_loadMore"
               @selectItem="selectItem">
       <!-- <sort></sort> -->
         </list>
@@ -93,7 +93,7 @@
       async _getTrend (item) {
         const params = {
           limit: 20,
-          currrentPage: this.page,
+          currentPage: this.page,
           tag: this.dynamicItem.tag
         }
         switch (item) {

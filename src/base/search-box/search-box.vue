@@ -2,7 +2,7 @@
   <div id="search-box">
     <div class="search-box">
       <i class=""></i>
-      <input ref="query" type="text" class="box" v-model="query" :placeholder="'搜索关键字'" @keyup.enter="search" @input="queryChange">
+      <input ref="query" type="text" class="box" v-model="query" :placeholder="'搜索关键字'" @keyup.enter="search" @input="queryChange" @focus="win">
       <i @click="clear" v-show="query" class="icon iconfont icon-close"></i>
     </div>
   </div>
@@ -24,6 +24,9 @@
     components: {},
     watch: {},
     methods: {
+      win () {
+        console.log(navigator.userAgent)
+      },
       setQuery (query) {
         this.query = query
       },
@@ -32,6 +35,7 @@
         this.$emit('clearQuery', this.query)
       },
       search () {
+        this.blur()
         this.$emit('searchQuery', this.query)
       },
       focus () {
@@ -45,7 +49,8 @@
       })
     },
     created () {},
-    mounted () {}
+    mounted () {
+    }
   }
 </script>
 
@@ -55,6 +60,8 @@
   @import "~common/stylus/mixin"
   html-font-size = 75px;
 
+  #search-box
+    display flex
   .search-box
     height 88px
     width 750px
@@ -65,7 +72,7 @@
     background $color-background
     border-bottom 3px solid #dfdfdf
     input
-      font-size 16px
+      font-size $font-size-medium-x * 2
       width 570px
       height 62px
       padding 0 25px
@@ -76,14 +83,16 @@
       height 43px
       width 43px
       position absolute
+      top .3rem
       left 55px
       bg-image('菜单-搜索-默认')
       background-size 100% 100%
     i.icon-close
       position absolute
+      top .4rem
       right 10px
       color $color-text-d
   ::-webkit-input-placeholder
-    font-size 12px
+    font-size $font-size-medium-x * 2
     color $color-text-d
 </style>

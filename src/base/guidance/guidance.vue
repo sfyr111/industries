@@ -13,19 +13,19 @@
         </div>
         <div class="bottom">
           <group class="bottom-group">
-            <popup-picker title="我所在的行业" 
-            :data="industryOption" 
-            :columns="1" 
-            placeholder="请选择" 
-            v-model="industry"  
-            @on-hide="shadeHide" 
+            <popup-picker title="我所在的行业"
+            :data="industryOption"
+            :columns="1"
+            placeholder="请选择"
+            v-model="industry"
+            @on-hide="shadeHide"
             show-name
             ref="industryPicker"></popup-picker>
-            <div class="company-box"> 
-              <popup-picker title="我的公司" 
-              :data="companyOption" 
+            <div class="company-box">
+              <popup-picker title="我的公司"
+              :data="companyOption"
               :columns="1"
-              placeholder="请选择" 
+              placeholder="请选择"
               v-model="company"
               show-name
               ref="companyPicker"></popup-picker>
@@ -233,12 +233,12 @@
         .bottom-group
           .weui-label
             width 3rem
-    >.footer 
+    >.footer
       height 433px
       display flex
       justify-content center
       align-items center
-      >.btn 
+      >.btn
         width 240px
         height 80px
         background #4799FE

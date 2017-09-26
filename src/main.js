@@ -19,7 +19,9 @@ Vue.use(ToastPlugin)
 FastClick.attach(document.body)
 
 try {
-  vrv.init({})
+  vrv.init({
+    // debug: true
+  })
 } catch (err) {
   throw err.stack
 }
@@ -32,7 +34,6 @@ Vue.prototype.$log = console.log.bind(console)
 // Vue.prototype.$log = function () {
 //   console.log.apply(console, arguments)
 // }
-
 const userToken = getParameterByName('userToken', document.location)
 
 store.dispatch('saveUser', userToken)

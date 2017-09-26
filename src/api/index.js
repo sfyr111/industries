@@ -45,7 +45,8 @@ export const getIndustryList = async function (data = {}) {
 
 export const getCompanyList = async function (data = {}) {
   const url = '/industry/companys/get.do'
-  const params = { userToken: store.getters.userToken, ...data }
+
+  const params = { userToken: store.getters.userToken, ...data, count: !data.count ? 1000 : data.count }
 
   const response = await api.get(url, params)
   return response
@@ -164,15 +165,26 @@ export const getTenderTrend = async function (data = {}) {
  */
 export const getProductClassify = async function (data = {}) {
   const url = '/industry/products/get.do'
-  const params = { userToken: store.getters.userToken, ...data }
+
+  const params = { userToken: store.getters.userToken, ...data, count: !data.count ? 1000 : data.count }
 
   const response = await api.get(url, params)
   return response
 }
 
-export const getTenderClassify = async function (data = {}) {
-  const url = '/industry/zhaobiao/get.do'
-  const params = { userToken: store.getters.userToken, ...data }
+export const getTenderProductsClassify = async function (data = {}) {
+  const url = '/industry/zhaobiao/products/get.do'
+
+  const params = { userToken: store.getters.userToken, ...data, count: !data.count ? 1000 : data.count }
+
+  const response = await api.get(url, params)
+  return response
+}
+
+export const getTenderCompanyClassify = async function (data = {}) {
+  const url = '/industry/zhaobiao/company/get.do'
+
+  const params = { userToken: store.getters.userToken, ...data, count: !data.count ? 1000 : data.count }
 
   const response = await api.get(url, params)
   return response
@@ -180,7 +192,8 @@ export const getTenderClassify = async function (data = {}) {
 
 export const getIndustryClassify = async function (data = {}) {
   const url = '/industry/industrystag.do'
-  const params = { userToken: store.getters.userToken, ...data }
+
+  const params = { userToken: store.getters.userToken, ...data, count: !data.count ? 1000 : data.count }
 
   const response = await api.get(url, params)
   return response
@@ -188,7 +201,8 @@ export const getIndustryClassify = async function (data = {}) {
 
 export const getCompanyClassify = async function (data = {}) {
   const url = '/industry/companys/gettag.do'
-  const params = { userToken: store.getters.userToken, ...data }
+
+  const params = { userToken: store.getters.userToken, ...data, count: !data.count ? 1000 : data.count }
 
   const response = await api.get(url, params)
   return response
@@ -276,6 +290,27 @@ export const getAnalysisPlan = async function (data = {}) {
 
 export const getRecommendAnalysisPlan = async function (data = {}) {
   const url = '/analysis/recommendPlan/get.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.get(url, params)
+  return response
+}
+
+export const modifyAnalysisPlan = async function (data = {}) {
+  const url = '/analysis/plan/modify.do'
+  const params = { userToken: store.getters.userToken, ...data }
+
+  const response = await api.patch(url, params)
+  return response
+}
+
+/**
+ *
+ * 各种图表
+ */
+// 数据时间趋势图
+export const getChart0 = async function (data = {}) {
+  const url = '/analysis/chart0.do'
   const params = { userToken: store.getters.userToken, ...data }
 
   const response = await api.get(url, params)

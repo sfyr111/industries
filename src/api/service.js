@@ -4,6 +4,9 @@ import qs from 'qs'
 // const apihost = process.env.NODE_ENV === 'production' ? '/industries' : 'http://61.147.125.60:9080/industries/'
 // const apihost = process.env.NODE_ENV === 'http://61.147.125.60:9080/industries/'
 
+axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : ''
+// axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? 'http://61.147.125.60:3002' : ''
+
 axios.interceptors.request.use(function (config) {
   return config
 }, function (error) {
@@ -127,7 +130,7 @@ export default {
     return axios({
       method: 'post',
       // baseURL: 'http://61.147.125.60:9080/industries/',
-      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
+      // baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       data: qs.stringify(data),
       timeout: 20000,
@@ -142,7 +145,7 @@ export default {
     return axios({
       method: 'patch',
       // baseURL: 'http://61.147.125.60:9080/industries/',
-      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
+      // baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       data: qs.stringify(data),
       timeout: 20000,
@@ -156,7 +159,7 @@ export default {
   get (url, params) {
     return axios({
       method: 'get',
-      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
+      // baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       params, // get参数
       timeout: 20000,
@@ -169,7 +172,7 @@ export default {
   delete (url, params) {
     return axios({
       method: 'delete',
-      baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
+      // baseURL: process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : '',
       url,
       params, // get参数
       timeout: 20000,

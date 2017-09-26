@@ -22,12 +22,12 @@
               </span>
             </div>
             <div class="content-body" v-html="detail.content">
-
+              <!-- 这里有特殊标签 -->
             </div>
             <div class="content-foort">
               <div class="ft-left">
                 <!-- <span @click="goUrl(detail.url)">阅读原文</span> -->
-                <span @click="copy(detail.url)">复制链接</span>
+                <!--<span @click="copy(detail.url)">复制链接</span>-->
               </div>
              <!-- <div class="ft-right">
                 <div class="zhan">
@@ -84,11 +84,13 @@
     computed: {
       modMenus () {
         return this.isFavorite ? {
-          forwardButton: '转发',
-          wumaohoutai: '已收藏'
+//          forwardButton: '转发',
+          wumaohoutai: '已收藏',
+          copyUrl: '复制链接'
         } : {
-          forwardButton: '转发',
-          collectButton: '收藏'
+//          forwardButton: '转发',
+          collectButton: '收藏',
+          copyUrl: '复制链接'
         }
       },
       ...mapGetters([
@@ -115,6 +117,7 @@
       clickMenu (menu) { // 收藏或转发
         // if (menu === 'forwardButton') this.forward()
         if (menu === 'collectButton') this.collect()
+        if (menu === 'copyUrl') this.copy(this.detail.url)
       },
       collect () {
         this._saveCollectArticles()
@@ -172,7 +175,8 @@
     created () {
       this.vrvReady()
     },
-    mounted () {}
+    mounted () {
+    }
   }
 </script>
 
@@ -201,7 +205,7 @@
       height calc(100% - 1.5rem)
       background $color-background-d
       .content-box
-        min-height 1194px
+        /*min-height 1194px*/
         padding 10px 50px
         background $color-background
       .content-title
@@ -224,6 +228,7 @@
         .content-time
           color $color-text-l
       .content-body
+        min-height 13rem
         font-size $font-size-medium * 2
         color $color-text
         line-height 45px

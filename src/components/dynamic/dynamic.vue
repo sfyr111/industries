@@ -32,7 +32,7 @@
   import VHeader from 'components/v-header/v-header'
   import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import { mapGetters, mapActions, mapMutations } from 'vuex'
-  import { getIndustryTrend, getCompanyTrend, getProductTrend, getTenderTrend, getIndustryClassify, getCompanyClassify, getProductClassify, getTenderClassify } from 'api'
+  import { getIndustryTrend, getCompanyTrend, getProductTrend, getTenderTrend, getIndustryClassify, getCompanyClassify, getProductClassify, getTenderProductsClassify } from 'api'
 
   export default {
     name: 'dynamic',
@@ -101,10 +101,10 @@
           }
         })
       },
-      async _getTenderClassify () {
+      async _getTenderProductsClassify () {
         const params = {
         }
-        return await getTenderClassify(params).then(data => {
+        return await getTenderProductsClassify(params).then(data => {
           if (data.code === ERR_OK) {
             return data
           }
@@ -150,7 +150,7 @@
             return await this._getProductClassify()
           }
           case 'tender': {
-            return await this._getTenderClassify()
+            return await this._getTenderProductsClassify()
           }
           default: {
             return await ''
@@ -160,7 +160,7 @@
       async _getTrend (item) {
         const params = {
           limit: 20,
-          currrentPage: this.page
+          currentPage: this.page
         }
         switch (item) {
           case 'industry': {
@@ -252,6 +252,7 @@
   @import "~stylus-px2rem/index"
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
+  @import '~swiper/dist/css/swiper.css'
   html-font-size = 75px;
 
   .dynamic
