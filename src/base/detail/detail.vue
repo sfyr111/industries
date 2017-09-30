@@ -133,7 +133,8 @@
         const params = {
           url: this.detail.url,
           title: this.detail.title,
-          articleId: this.detail.id
+          articleId: this.detail.id,
+          webSite: this.detail.webSite
         }
         saveCollectArticles(params).then(data => {
           if (data.code === ERR_OK) {

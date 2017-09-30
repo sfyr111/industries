@@ -92,6 +92,7 @@
       color $color-text
     .v-header-right
       .v-header-btn
+        font-size $font-size-small * 2
         width 72px
         height 72px
         line-height 72px

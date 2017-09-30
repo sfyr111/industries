@@ -30,6 +30,7 @@
   import VHeader from 'components/v-header/v-header'
   import PlanList from 'base/plan-list/plan-list'
   import { mapGetters, mapMutations } from 'vuex'
+  import bus from 'common/js/bus'
   import { ERR_OK } from 'api/config'
   import { getCompanyList, getProductClassify, getTenderProductsClassify, getTenderCompanyClassify, createAnalysisPlan, getAnalysisPlan, getRecommendAnalysisPlan, deleteAnalysisPlan, modifyAnalysisPlan } from 'api'
 
@@ -166,6 +167,7 @@
           })
       },
       async _modifyAnalysisPlan ({ startTime, endTime, selectedItems }) {
+        console.log(selectedItems)
         const planTitle = selectedItems.map(item => {
           return item.name
         }).join('、') + '的对比分析'
@@ -193,6 +195,31 @@
                 type: 'success'
               })
               this.hideSettings()
+            }
+          })
+      },
+      async _busModifyAnalysisPlan ({ startTime, endTime, selectedItems, id, tag }) {
+        const planTitle = selectedItems.map(item => {
+          return item.name
+        }).join('、') + '的对比分析'
+        const params = {
+          id,
+          tag,
+          q: JSON.stringify(selectedItems),
+          name: planTitle, // 计划名,
+          endPoTime: endTime + ' 23:59:59',
+          startPoTime: startTime + ' 00:00:00'
+        }
+        return await modifyAnalysisPlan(params)
+          .then(data => {
+            if (data.code === ERR_OK) return data
+            else return Promise.reject()
+          })
+          .then(this._getAnalysisPlan)
+          .then(data => {
+            if (data.code === ERR_OK) {
+              const { list: planList } = data
+              this.planList = planList
             }
           })
       },
@@ -358,6 +385,9 @@
     },
     created () {
       this._concurrent()
+      bus.$on('busChangeDate', (data) => {
+        this._busModifyAnalysisPlan(data)
+      })
     },
     mounted () {}
   }

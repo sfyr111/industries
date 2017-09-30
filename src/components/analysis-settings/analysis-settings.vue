@@ -44,7 +44,7 @@
     data () {
       return {
         showFlag: false,
-        startTime: dateFormat(Date.now() - 30 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
+        startTime: dateFormat(Date.now() - 7 * 24 * 60 * 60 * 1000, 'YYYY-MM-DD'),
         endTime: dateFormat(Date.now(), 'YYYY-MM-DD'),
         selectedItems: []
       }
@@ -89,17 +89,6 @@
         console.log(itemsObj)
         this.$emit('createPlan', itemsObj)
         this._clearItem()
-      },
-      checkTime (startTime, endTime) {
-        if (Date.parse(startTime) >= Date.parse(endTime)) {
-          this.$vux.toast.show({
-            text: '起始时间必须小于结束时间',
-            time: 1000,
-            type: 'warn'
-          })
-          return false
-        }
-        return true
       },
       checkItem (selectedItems) {
         if (selectedItems.length < 2) {

@@ -9,12 +9,16 @@
               :hasMore="hasMore"
               :hasRefresh="hasRefresh"
               :reveal="reveal"
+              :isShowLoading="isShowLoading"
               @scroll=""
               @refresh="_refresh"
               @loadMore="_loadMore"
               @selectItem="selectItem">
       <!-- <sort></sort> -->
         </list>
+        <div class="no-result" v-show="!list.length && !isShowLoading">
+          <span>无匹配数据</span>
+        </div>
       </div>
     </div>
   </transition>
@@ -43,7 +47,9 @@
         hasRefresh: true,
         pullup: true,
         pulldown: true,
-        reveal: false
+        reveal: false,
+        showEmpty: false,
+        isShowLoading: true
       }
     },
     computed: {
@@ -143,8 +149,13 @@
         }
         const data = await this._getTrend(this.discoveryItem)
         const { list } = data
+        if (list.length === 0) this.isEmpty()
         this.list = list
         return data
+      },
+      isEmpty () {
+        this.isShowLoading = false
+        this.showEmpty = true
       },
       ...mapActions([
         'fetchDetail'
@@ -175,6 +186,15 @@
       z-index 2
     .list-wrapper
       height calc(100% - 1.44rem)
+    .no-result
+      width 100%
+      color $color-theme
+      text-align center
+      position absolute
+      top 50%
+      left 50%
+      transform translate3d(-50%, -50%, 0)
+
   .slide-enter-active,
   .slide-leave-active
     transition all 0.3s

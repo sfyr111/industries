@@ -5,10 +5,10 @@
       <block></block>
       <div class="logo"></div>
       <div class="help-menu">
-        <!-- <router-link tag="div" to="/introduce" >行业态势分析简介</router-link>
-        <router-link tag="div" to="/copyright" >行业态势分析版权声明</router-link>
-        <router-link tag="div" to="/versions" >行业态势分析版本声明</router-link> -->
-        <section>
+        <router-link tag="div" to="/user/help/introduce" >行业态势分析简介</router-link>
+        <router-link tag="div" to="/user/help/copyright" >行业态势分析版权声明</router-link>
+        <router-link tag="div" to="/user/help/versions" >行业态势分析版本声明</router-link>
+        <!-- <section>
           <p>产品简要介绍：</p>
           <p>
             北信源行业态势分析软件通过对行业及企业相关数据的采集和分析，从公司管理者、行业竞争企业、竞争产品等方面对这些数据大数据分析，为企业管理者提供行业决策、公司决策 的参考依据
@@ -16,8 +16,9 @@
         </section>
         <p>
           版本号: v1.0
-        </p>
+        </p> -->
       </div>
+      <router-view></router-view>
     </div>
   </transition>
 </template>

@@ -38,6 +38,19 @@ export const chartDataMixin = {
 }
 
 export const dateMixin = {
+  methods: {
+    checkTime (startTime, endTime) {
+      if (Date.parse(startTime) >= Date.parse(endTime)) {
+        this.$vux.toast.show({
+          text: '起始时间必须小于结束时间',
+          time: 1000,
+          type: 'warn'
+        })
+        return false
+      }
+      return true
+    }
+  },
   filters: {
     formatDate: function (date) {
       return dateFormat(date, 'YYYY-MM-DD')

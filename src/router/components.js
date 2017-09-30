@@ -70,6 +70,24 @@ export const Help = resolve => {
   })
 }
 
+export const Copyright = resolve => {
+  import('components/help/copyright').then(module => {
+    resolve(module)
+  })
+}
+
+export const Introduce = resolve => {
+  import('components/help/introduce').then(module => {
+    resolve(module)
+  })
+}
+
+export const Versions = resolve => {
+  import('components/help/versions').then(module => {
+    resolve(module)
+  })
+}
+
 export const Personal = resolve => {
   import('components/personal/personal').then(module => {
     resolve(module)

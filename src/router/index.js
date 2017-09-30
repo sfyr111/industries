@@ -11,8 +11,11 @@ import {
         Dynamic,
         Personal,
         Analysis,
+        Versions,
         Favorites,
         Discovery,
+        Copyright,
+        Introduce,
         DynamicDetail,
         AnalysisOption,
         AnalysisDetail
@@ -107,7 +110,24 @@ export default new Router({
         {
           path: 'help',
           name: 'help',
-          component: Help
+          component: Help,
+          children: [
+            {
+              path: 'introduce',
+              name: 'introduce',
+              component: Introduce
+            },
+            {
+              path: 'versions',
+              name: 'versions',
+              component: Versions
+            },
+            {
+              path: 'copyright',
+              name: 'copyright',
+              component: Copyright
+            }
+          ]
         },
         {
           path: 'favorites',

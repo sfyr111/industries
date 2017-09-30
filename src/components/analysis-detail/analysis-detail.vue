@@ -1,10 +1,18 @@
 <template>
   <transition name="slide">
     <div class="analysis-detail">
-      <v-header :title="getTitle(analysisItem)" class="header"></v-header>
+      <v-header :title="getTitle(analysisItem)" class="header">
+        <div slot="right" class="change-btn" @click="changeType">
+          切换
+        </div>
+      </v-header>
       <div class="title-wrapper">
         <h2>{{selectedItem.name}}</h2>
-        <span class="time">{{selectedItem.startPoTime | formatDate }} 至 {{selectedItem.endPoTime | formatDate }}</span>
+        <!--<span class="time">{{ selectedItem.startPoTime | formatDate }} 至 {{ selectedItem.endPoTime | formatDate }}</span>-->
+        <date-range
+          :startTime="selectedItem.startPoTime | formatDate"
+          :endTime="selectedItem.endPoTime | formatDate"
+          @changeDate="_changeDate"></date-range>
         <!--<span class="describe">企业竞争力分析报告</span>-->
       </div>
       <div class="chart">
@@ -20,12 +28,14 @@
 
 <script>
   import VeChart from 'v-charts/lib/chart.min'
+  import DateRange from 'base/date-range/date-range'
   import VHeader from 'components/v-header/v-header'
   import Loading from 'base/loading/loading'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { chartDataMixin, dateMixin } from 'common/js/mixin'
   import { ERR_OK } from 'api/config'
   import { getChart0 } from 'api'
+  import bus from 'common/js/bus'
 
   export default {
     name: 'analysis-detail',
@@ -51,9 +61,31 @@
     components: {
       VeChart,
       VHeader,
-      Loading
+      Loading,
+      DateRange
     },
     methods: {
+      ...mapMutations({
+        changeDateSelectedItem: 'analysis/CHANGE_DATE_SELECTED_ITEM'
+      }),
+      _changeDate (date) {
+        if (!this.checkTime(date.dateStartTime, date.dateEndTime)) return
+        const params = {
+          startTime: date.dateStartTime,
+          endTime: date.dateEndTime,
+          selectedItems: JSON.parse(this.selectedItem.q),
+          id: this.selectedItem.id,
+          tag: this.selectedItem.tag
+        }
+        this.changeDateSelectedItem(date)
+        this._concurrent()
+        bus.$emit('busChangeDate', params)
+      },
+      changeType () {
+        this.index++
+        if (this.index >= this.typeArr.length) { this.index = 0 }
+        this.chartSettings = { type: this.typeArr[this.index] }
+      },
       async _getChart0 () {
         const params = {
           id: this.selectedItem.id,
@@ -95,8 +127,10 @@
       }
     },
     created () {
+      this.typeArr = ['line', 'histogram', 'bar']
+      this.index = 0
       this.chartSettings = {
-        type: 'line',
+        type: this.typeArr[this.index],
         label: {
           normal: { show: true }
         }
@@ -122,6 +156,9 @@
     right 0
     z-index 100
     background-color #fff
+    .header
+      .change-btn
+        font-size $font-size-medium * 2
     .title-wrapper
       padding 20px
       line-height 1.5em

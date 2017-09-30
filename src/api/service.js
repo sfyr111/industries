@@ -4,8 +4,8 @@ import qs from 'qs'
 // const apihost = process.env.NODE_ENV === 'production' ? '/industries' : 'http://61.147.125.60:9080/industries/'
 // const apihost = process.env.NODE_ENV === 'http://61.147.125.60:9080/industries/'
 
-axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : ''
-// axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? 'http://61.147.125.60:3002' : ''
+// axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? 'http://localhost:3002' : ''
+axios.defaults.baseURL = process.env.NODE_ENV !== 'production' ? 'http://61.147.125.60:3002' : ''
 
 axios.interceptors.request.use(function (config) {
   return config

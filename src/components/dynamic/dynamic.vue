@@ -40,7 +40,7 @@
     data () {
       return {
         swiperOption: {
-          slidesPerView: 3,
+          slidesPerView: 3.6,
           paginationClickable: true,
           spaceBetween: 20,
           freeMode: true

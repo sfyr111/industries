@@ -165,8 +165,9 @@
       saveAndEsc () {
         this._saveUserSettings().then(() => {
           try {
-            // 关闭
+            alert('修改成功')
             vrv.jssdk.closeView({})
+            window.location.href = process.env.NODE_ENV !== 'production' ? `http://localhost:7000/?userToken=${this.userToken}` : `http://61.147.125.60:3002/?userToken=${this.userToken}`
           } catch (e) {
             console.warn(e)
             window.location.href = process.env.NODE_ENV !== 'production' ? `http://localhost:7000/?userToken=${this.userToken}` : `http://61.147.125.60:3002/?userToken=${this.userToken}`
@@ -177,8 +178,10 @@
         const params = {
           sex: this.sex[0],
           companyid: this.companyId,
+          companyName: this.company[0] || '未设置',
           age: this.age[0],
           industryid: this.industryId,
+          industryName: this.industry[0] || '未设置',
           job: this.job[0],
           firstlogin: this.userToken === '1235' || false
         }

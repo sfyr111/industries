@@ -58,7 +58,8 @@
         return this.tabItem[0]
       },
       tabContent () {
-        return this.data.filter(item => item.datas.length)
+//        return this.data.filter(item => item.datas.length) // 假数据过滤
+        return this.data
       }
     },
     components: {
